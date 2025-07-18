@@ -1,17 +1,26 @@
-import mysql from 'mysql2';
-import config from './config.js';
+require('dotenv').config();
+const mysql = require('mysql2/promise');
 
 const pool = mysql.createPool({
-    host: config.database.host,
-    user: config.database.user,
-    password: config.database.password,
-    database: config.database.name,
-    waitForConnections: true,
-    connectionLimit: config.database.connectionLimit || 10,
-    queueLimit: 0
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
+  port: process.env.MYSQL_PORT,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-// Convert pool to use promises
-const promisePool = pool.promise();
+async function testConnection() {
+  try {
+    const [rows] = await pool.query('SELECT NOW() AS now');
+    console.log('✅ Connected! Current time:', rows[0].now);
+  } catch (err) {
+    console.error('❌ Connection error:', err);
+  }
+}
 
-export default promisePool;
+testConnection();
+
+module.exports = pool;
