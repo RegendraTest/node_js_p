@@ -18,6 +18,13 @@ export const checkEmail = async (req, res) => {
                 success: true,
                 message: 'Email ID is available'
             });
+        }else{
+          
+                return res.status(400).json({
+                    success: false,
+                    message: 'Email ID is not available'
+                });
+            
         }
 
 
