@@ -1,8 +1,7 @@
-import dotenv from 'dotenv';
-dotenv.config();
-import mysql from 'mysql2/promise';
+require('dotenv').config();
+const mysql = require('mysql2/promise');
 
-const pool = mysql.createPool({
+const db = mysql.createPool({
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
@@ -15,15 +14,11 @@ const pool = mysql.createPool({
 
 async function testConnection() {
   try {
-    const [rows] = await pool.query('SELECT NOW() AS now');
-    console.log('✅ Connected! Current time:', rows[0].now);
+    const [rows] = await db.query('SELECT NOW() AS now');
+    console.log('✅ Connected to Railway MySQL! Time:', rows[0].now);
   } catch (err) {
-    console.error('❌ Connection error:', err);
+    console.error('❌ Connection failed:', err.message);
   }
 }
 
 testConnection();
-
-export default {
-    query: (...args) => pool.query(...args)
-};
