@@ -1,4 +1,4 @@
-import db from '../config/db.js';
+const db = require('../config/db.js');
 
 export const checkEmail = async (req, res) => {
     try {
